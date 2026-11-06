@@ -53,8 +53,21 @@ def on_startup():
 
             conn.execute(text('ALTER TABLE volunteers ADD COLUMN IF NOT EXISTS current_incident_id INTEGER'))
             conn.execute(text('ALTER TABLE volunteers ADD COLUMN IF NOT EXISTS assigned_at TIMESTAMP'))
+
+            # Users table enhancements for multi-admin & status
+            conn.execute(text('ALTER TABLE users ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT TRUE'))
+            conn.execute(text('UPDATE users SET is_active = TRUE WHERE is_active IS NULL'))
+            conn.execute(text('ALTER TABLE users ADD COLUMN IF NOT EXISTS created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP'))
+            conn.execute(text('UPDATE users SET created_at = CURRENT_TIMESTAMP WHERE created_at IS NULL'))
     except Exception:
         # Ignore if DB doesn't support IF NOT EXISTS or table missing
+        pass
+
+    # Ensure role enum includes SUPER_ADMIN
+    try:
+        with engine.connect().execution_options(isolation_level="AUTOCOMMIT") as conn:
+            conn.execute(text("ALTER TYPE role ADD VALUE IF NOT EXISTS 'SUPER_ADMIN'"))
+    except Exception:
         pass
 
 app.include_router(auth_router, prefix=API_PREFIX)

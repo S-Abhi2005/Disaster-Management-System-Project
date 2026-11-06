@@ -36,4 +36,10 @@ def get_current_user(
     if user is None:
         raise credentials_exception
 
+    if hasattr(user, "is_active") and not user.is_active:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Account is deactivated. Please contact an administrator."
+        )
+
     return user

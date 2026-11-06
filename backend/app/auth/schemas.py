@@ -1,12 +1,14 @@
 from pydantic import BaseModel, EmailStr, ConfigDict
 from enum import Enum
 from typing import Optional
+from datetime import datetime
 
 # Enums for controlled vocabulary as per your requirements
 class Role(str, Enum):
     CITIZEN = "CITIZEN"
     VOLUNTEER = "VOLUNTEER"
     ADMIN = "ADMIN"
+    SUPER_ADMIN = "SUPER_ADMIN"
 
 class VolunteerSkill(str, Enum):
     FIRST_AID = "First Aid"
@@ -96,3 +98,44 @@ class PasswordResetConfirm(BaseModel):
     
     token: str
     new_password: str
+
+
+class AdminUserCreate(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    full_name: str
+    email: EmailStr
+    password: str
+    phone_number: Optional[str] = ""
+    city: Optional[str] = ""
+    role: Optional[Role] = Role.ADMIN
+
+
+class AdminUserUpdate(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    full_name: Optional[str] = None
+    email: Optional[EmailStr] = None
+    phone_number: Optional[str] = None
+    city: Optional[str] = None
+    role: Optional[Role] = None
+    password: Optional[str] = None
+
+
+class AdminStatusUpdate(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    is_active: bool
+
+
+class AdminUserResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    full_name: Optional[str] = ""
+    email: EmailStr
+    phone_number: Optional[str] = ""
+    city: Optional[str] = ""
+    role: str
+    is_active: bool = True
+    created_at: Optional[datetime] = None

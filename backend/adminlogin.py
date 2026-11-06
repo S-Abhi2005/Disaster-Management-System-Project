@@ -53,23 +53,25 @@ def seed_admin():
         hashed = hash_password(password)
 
         if user:
-            print("Admin already exists. Updating...")
+            print("Super Admin already exists. Updating...")
             user.hashed_password = hashed
-            user.role = Role.ADMIN
+            user.role = Role.SUPER_ADMIN
+            user.is_active = True
         else:
-            print("Creating new admin...")
+            print("Creating new Super Admin...")
             user = User(
                 full_name="Abhishek",
                 email=email,
                 phone_number="7777777777",
                 hashed_password=hashed,
                 city="Yadgir",
-                role=Role.ADMIN
+                role=Role.SUPER_ADMIN,
+                is_active=True
             )
             db.add(user)
 
         db.commit()
-        print(f"Admin ready: {email} / {password}")
+        print(f"Super Admin ready: {email} / {password} (Role: SUPER_ADMIN)")
 
     finally:
         db.close()

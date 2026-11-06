@@ -3,9 +3,10 @@
 /** Role → dashboard path */
 export const getRolePath = (role) => {
   const map = {
-    citizen:   '/citizen/dashboard',
-    volunteer: '/volunteer/dashboard',
-    admin:     '/admin/dashboard',
+    citizen:     '/citizen/dashboard',
+    volunteer:   '/volunteer/dashboard',
+    admin:       '/admin/dashboard',
+    super_admin: '/admin/dashboard',
   };
   return map[role] || '/login';
 };
@@ -13,9 +14,10 @@ export const getRolePath = (role) => {
 /** Role → profile path */
 export const getProfilePath = (role) => {
   const map = {
-    citizen:   '/citizen/profile',
-    volunteer: '/volunteer/profile',
-    admin:     '/admin/profile',
+    citizen:     '/citizen/profile',
+    volunteer:   '/volunteer/profile',
+    admin:       '/admin/profile',
+    super_admin: '/admin/profile',
   };
   return map[role] || '/login';
 };

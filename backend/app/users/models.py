@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Enum as SAEnum, DateTime
+from sqlalchemy import Column, Integer, String, Boolean, Enum as SAEnum, DateTime
 from datetime import datetime
 from ..core.database import Base
 from ..auth.schemas import Role
@@ -12,7 +12,9 @@ class User(Base):
     phone_number = Column(String, nullable=True)
     hashed_password = Column(String, nullable=False)
     city = Column(String, nullable=True)
-    role = Column(SAEnum(Role), nullable=False)
+    role = Column(SAEnum(Role, name="role"), nullable=False)
+    is_active = Column(Boolean, default=True, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=True)
     
     # Password reset fields
     reset_token = Column(String, nullable=True)

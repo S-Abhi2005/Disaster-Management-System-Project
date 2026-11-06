@@ -13,6 +13,7 @@ const Analytics           = lazy(() => import('./Analytics'));
 const AlertsManagement    = lazy(() => import('./AlertsManagement'));
 const AssignmentHistory   = lazy(() => import('./AssignmentHistory'));
 const AdminMapView        = lazy(() => import('./AdminMapView'));
+const AdminManagement     = lazy(() => import('./AdminManagement'));
 const ReportWrongInfo     = lazy(() => import('./ReportWrongInfo'));
 
 const AdminDashboard = () => (
@@ -25,6 +26,7 @@ const AdminDashboard = () => (
         <Route path="volunteers"  element={<VolunteerManagement />} />
         <Route path="resources"   element={<ResourceManagement />} />
         <Route path="resources/:id" element={<ResourceDetails />} />
+        <Route path="admins"      element={<AdminManagement />} />
         <Route path="analytics"   element={<Analytics />} />
         <Route path="alerts"      element={<AlertsManagement />} />
         <Route path="assignments" element={<AssignmentHistory />} />

@@ -184,7 +184,14 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
             detail="Invalid credentials"
         )
     
-    token = create_access_token({"sub": user.email, "role": user.role})
+    if hasattr(user, "is_active") and not user.is_active:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Account is deactivated. Please contact an administrator."
+        )
+
+    role_val = user.role.value if hasattr(user.role, 'value') else str(user.role)
+    token = create_access_token({"sub": user.email, "role": role_val})
     return {"access_token": token, "token_type": "bearer"}
 
 
@@ -197,5 +204,12 @@ def login_json(credentials: UserLogin, db: Session = Depends(get_db)):
             detail="Invalid credentials"
         )
 
-    token = create_access_token({"sub": user.email, "role": user.role})
+    if hasattr(user, "is_active") and not user.is_active:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Account is deactivated. Please contact an administrator."
+        )
+
+    role_val = user.role.value if hasattr(user.role, 'value') else str(user.role)
+    token = create_access_token({"sub": user.email, "role": role_val})
     return {"access_token": token, "token_type": "bearer"}

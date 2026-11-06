@@ -4,7 +4,7 @@ import {
   ShieldAlert, LayoutDashboard, FileText, MapPin, Bell,
   User, LogOut, Menu, X, ChevronRight, Users, Package,
   Activity, Clipboard, AlertTriangle, Map, History,
-  ChevronDown, ToggleLeft, AlertCircle,
+  ChevronDown, ToggleLeft, AlertCircle, ShieldCheck,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import useAuthStore from '../store/authStore';
@@ -39,16 +39,17 @@ const NAV_LINKS = {
     { to: '/admin/incidents',     icon: AlertTriangle,    label: 'Incidents' },
     { to: '/admin/volunteers',    icon: Users,            label: 'Volunteers' },
     { to: '/admin/resources',     icon: Package,          label: 'Resources' },
+    { to: '/admin/admins',        icon: ShieldCheck,      label: 'Admin Accounts' },
     { to: '/admin/analytics',     icon: Activity,         label: 'Analytics' },
     { to: '/admin/map',           icon: MapPin,           label: 'Map View' },
-   
   ],
 };
 
 const ROLE_CONFIG = {
-  citizen:   { label: 'Citizen',   gradFrom: '#3b82f6', gradTo: '#1d4ed8', accent: '#60a5fa', badge: 'text-blue-300',   bg: 'rgba(59,130,246,0.1)',  border: 'rgba(59,130,246,0.2)' },
-  volunteer: { label: 'Volunteer', gradFrom: '#22c55e', gradTo: '#15803d', accent: '#4ade80', badge: 'text-green-300',  bg: 'rgba(34,197,94,0.1)',   border: 'rgba(34,197,94,0.2)' },
-  admin:     { label: 'Admin',     gradFrom: '#a855f7', gradTo: '#7e22ce', accent: '#c084fc', badge: 'text-purple-300', bg: 'rgba(168,85,247,0.1)',  border: 'rgba(168,85,247,0.2)' },
+  citizen:     { label: 'Citizen',     gradFrom: '#3b82f6', gradTo: '#1d4ed8', accent: '#60a5fa', badge: 'text-blue-300',   bg: 'rgba(59,130,246,0.1)',  border: 'rgba(59,130,246,0.2)' },
+  volunteer:   { label: 'Volunteer',   gradFrom: '#22c55e', gradTo: '#15803d', accent: '#4ade80', badge: 'text-green-300',  bg: 'rgba(34,197,94,0.1)',   border: 'rgba(34,197,94,0.2)' },
+  admin:       { label: 'Admin',       gradFrom: '#a855f7', gradTo: '#7e22ce', accent: '#c084fc', badge: 'text-purple-300', bg: 'rgba(168,85,247,0.1)',  border: 'rgba(168,85,247,0.2)' },
+  super_admin: { label: 'Super Admin', gradFrom: '#ec4899', gradTo: '#be185d', accent: '#f472b6', badge: 'text-pink-300',   bg: 'rgba(236,72,153,0.1)',  border: 'rgba(236,72,153,0.2)' },
 };
 
 /* ── Sidebar Component ──────────────────────────────────────────────────────── */
@@ -132,7 +133,7 @@ const DashboardLayout = ({ children, role }) => {
   const location = useLocation();
 
   const links  = NAV_LINKS[role]  || [];
-  const config = ROLE_CONFIG[role] || ROLE_CONFIG.citizen;
+  const config = (user?.role === 'super_admin' ? ROLE_CONFIG.super_admin : null) || ROLE_CONFIG[role] || ROLE_CONFIG.citizen;
 
   // Simulated real-time notifications
   useNotifications(45000);
