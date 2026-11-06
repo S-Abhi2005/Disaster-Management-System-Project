@@ -1,0 +1,709 @@
+/* Custom styles extracted from index.html */
+
+body {
+    background: var(--bg-base);
+    color: var(--text-primary);
+}
+
+.go {
+    /* glass outer */
+    background: var(--outer-bg);
+    backdrop-filter: blur(var(--outer-blur));
+    -webkit-backdrop-filter: blur(var(--outer-blur));
+    border: 2px solid var(--outer-border);
+    box-shadow: var(--outer-shadow);
+    border-radius: 0.5rem;
+}
+
+.gi {
+    /* glass inner */
+    background: var(--panel-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 2px solid var(--panel-border);
+    box-shadow: var(--panel-shadow);
+    border-radius: var(--panel-radius);
+    color: var(--panel-text);
+
+    /* Animated gradient background */
+    background-size: 400% 400%;
+    animation: gradientShift 12s ease infinite;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.gi button,
+.gi input,
+.gi textarea {
+    border-color: var(--button-border);
+    background: var(--button-bg);
+    color: var(--button-text);
+    caret-color: currentColor;
+    transition: background 250ms ease, box-shadow 250ms ease, transform 250ms ease;
+    font-weight: 1000;
+}
+
+/* Apply button visuals to non-button elements (e.g., header card) */
+.button-like {
+    border: 2px solid var(--button-border);
+    background: var(--button-bg);
+    color: var(--button-text);
+    font-weight: 1000;
+}
+.button-like:hover {
+    background: var(--button-hover-bg);
+    box-shadow: 0 0 20px var(--grad-1), 0 0 40px var(--grad-2);
+    transform: scale(1.00);
+    transition: all 250ms ease;
+}
+
+.gi button i,
+.gi button svg {
+    color: inherit; /* FontAwesome <i> */
+    fill: currentColor; /* SVG fill */
+    stroke: currentColor; /* SVG stroke */
+}
+
+.gi button:hover {
+    background: var(--button-hover-bg);
+    box-shadow: 0 0 20px var(--grad-1), 0 0 40px var(--grad-2);
+    transform: scale(1.05);
+    transition: all 250ms ease;
+}
+
+/* Inputs and textareas: hover like buttons (subtle scale) */
+.gi input:hover,
+.gi textarea:hover {
+    background: var(--button-hover-bg);
+    box-shadow: 0 0 20px var(--grad-1), 0 0 40px var(--grad-2);
+    transform: scale(1.02);
+}
+
+.gi input::placeholder,
+.gi textarea::placeholder {
+    color: var(--button-text);
+    opacity: 0.8;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Themed border utility */
+.themed-border-2 {
+    border: 2px solid var(--panel-border);
+}
+
+/* Solid modal variant: force opaque dark backdrop via theme vars */
+.gi.modal-solid {
+    background: var(--modal-bg, rgba(17,24,39,0.96));
+    border: 2px solid var(--modal-border, var(--panel-border));
+    color: var(--modal-text, var(--text-primary));
+}
+
+/* Pulse + floating hover */
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+@keyframes floaty {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+.pulse-hover:hover {
+    animation: pulse 0.6s ease-in-out, floaty 3s ease-in-out infinite;
+}
+
+/* Brighten helper text under buttons on hover */
+.pulse-hover:hover .opacity-95 {
+    opacity: 1;
+}
+.pulse-hover .opacity-95 {
+    transition: opacity 200ms ease;
+}
+
+/* Hover shine effect for primary action buttons */
+.main-action-btn {
+    position: relative;
+    overflow: hidden;
+}
+.main-action-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+    pointer-events: none;
+}
+.main-action-btn:hover::before {
+    left: 100%;
+}
+
+/* Results section */
+#results {
+    white-space: pre-wrap;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    max-height: none;
+    overflow: visible;
+    color: var(--results-text, var(--text-primary, #ffffff));
+    transition: background 250ms ease, box-shadow 250ms ease, transform 250ms ease;
+}
+#results .summary-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: var(--card-shadow);
+    margin-bottom: 1.5rem;
+    color: var(--card-text);
+    transition: transform 200ms ease, box-shadow 200ms ease;
+}
+#results .summary-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+/* Results panel: hover effects similar to buttons */
+#results:hover {
+    background: var(--button-hover-bg);
+    box-shadow: 0 0 20px var(--grad-1), 0 0 40px var(--grad-2);
+    transform: scale(1.02);
+}
+
+.gradient-text {
+    color: var(--grad-fallback, currentColor);
+}
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+    .gradient-text {
+        background: linear-gradient(to right, var(--grad-1) 0%, var(--grad-2) 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        -webkit-text-fill-color: transparent;
+    }
+}
+
+/* Horizontal strip for document summary cards */
+.summary-grid {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 1rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    margin-top: 0.5rem;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Lists inside cards */
+#results .summary-card ul {
+    list-style: disc;
+    list-style-position: outside;
+    padding-left: 1.25rem;
+    margin: 0.5rem 0;
+}
+#results .summary-card ul ul {
+    list-style: circle;
+    padding-left: 1.25rem;
+    margin: 0.25rem 0;
+}
+#results .summary-card li {
+    margin: 0.25rem 0;
+}
+#results .summary-card li::marker {
+    color: var(--card-text);
+}
+
+/* Upload modal: Drag & Drop zone and file list */
+.gi .drop-zone {
+    background: var(--card-bg);
+    border: 2px dashed var(--dropzone-border);
+    color: var(--card-text);
+    transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease, background 250ms ease;
+}
+.gi .drop-zone:hover {
+    border-color: var(--dropzone-border);
+    background: var(--button-hover-bg);
+    box-shadow: 0 0 20px var(--grad-1), 0 0 40px var(--grad-2);
+    transform: scale(1.02);
+}
+.gi .drop-zone.is-dragover {
+    border-color: var(--grad-1);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    transform: translateY(-1px);
+}
+.gi .drop-zone .dz-invite {
+    margin-bottom: 0.25rem;
+}
+.gi .file-list {
+    list-style: disc;
+    padding-left: 1.25rem;
+    margin: 0.25rem 0 0;
+}
+.gi .file-list li {
+    margin: 0.15rem 0;
+    color: var(--panel-text);
+}
+
+/* Upload progress bar with shimmer */
+.gi .progress-track {
+    width: 100%;
+    height: 14px;
+    background: var(--progress-track-bg);
+    border-radius: 9999px;
+    overflow: hidden;
+    border: 1px solid var(--progress-track-border);
+}
+.gi .progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(120deg, var(--grad-1), var(--grad-2), var(--grad-1));
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite linear;
+    transition: width 200ms ease;
+}
+@keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+.gi .progress-bar.error {
+    background: #dc2626;
+}
+
+/* Spinner / Thinking */
+#results .thinking {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 0;
+}
+#results .thinking .spinner-ring {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 4px solid rgba(255,255,255,0.25);
+    border-top-color: var(--button-text);
+    animation: spin 1s linear infinite;
+}
+#results .thinking .msg {
+    font-weight: 800;
+    color: var(--button-text);
+    -webkit-text-fill-color: var(--button-text);
+}
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Card headers and copy buttons */
+#results .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.25rem;
+}
+#results .copy-btn {
+    background: var(--copy-btn-bg);
+    border: 1.5px solid var(--copy-btn-border);
+    color: var(--copy-btn-text);
+    border-radius: 9999px;
+    padding: 2px 10px;
+    font-size: 12px;
+    line-height: 18px;
+    font-weight: 800;
+    cursor: pointer;
+}
+#results .copy-btn:hover {
+    background: rgba(0,0,0,0.04);
+    border-color: rgba(0,0,0,0.3);
+}
+#results .copy-btn.success {
+    background: #16a34a;
+    border-color: #16a34a;
+    color: #fff;
+}
+
+/* Theme selector */
+#themeSelect {
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: rgba(15,23,42,0.85);
+    color: #ffffff;
+    border: 1.5px solid rgba(255,255,255,0.6);
+    border-radius: 9999px;
+    padding: 6px 34px 6px 12px;
+    font-weight: 800;
+    line-height: 1.25;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    cursor: pointer;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="white"><path d="M5.5 7.5l4.5 5 4.5-5"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 14px 14px;
+}
+#themeSelect:hover {
+    border-color: #ffffff;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.35);
+}
+#themeSelect:focus {
+    outline: 2px solid rgba(255,255,255,0.85);
+    outline-offset: 2px;
+}
+
+/* Ask input glow effect */
+form input:focus {
+    outline: none;
+    box-shadow: 0 0 10px var(--grad-1), 0 0 20px var(--grad-2);
+    border-color: var(--grad-2);
+    transition: all 200ms ease;
+}
+
+/* Typewriter animation (for tagline) */
+.tagline {
+  display: inline-block;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  animation: printText 4s steps(30, end) forwards;
+}
+
+@keyframes printText {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+/* ===== Theme System (CSS variables + overrides) ===== */
+/* Variables */
+:root,
+:root[data-theme="legacy"] {
+  --bg-base: #ffffff;
+  --outer-bg: rgba(255,255,255,0.1);
+  --outer-border: rgba(255,255,255,0.3);
+  --outer-shadow: 0 4px 30px rgba(0,0,0,0.1);
+  --outer-blur: 10px;
+
+  --panel-bg: linear-gradient(135deg, #333399cc 0%, #FF00CCcc 100%);
+  --panel-border: rgba(255,255,255,0.4);
+  --panel-shadow: 0 8px 32px 0 rgba(255,0,204,0.25);
+  --panel-radius: 8px;
+  --panel-text: #ffffff;
+
+  --text-primary: #ffffff;
+  --results-text: #ffffff;
+
+  --grad-1: #333399cc;
+  --grad-2: #FF00CCcc;
+  --grad-fallback: #333399;
+
+  --button-bg: rgba(255,255,255,0.15);
+  --button-text: #ffffff;
+  --button-border: rgba(255,255,255,0.7);
+  --button-hover-bg: rgba(255,255,255,0.3);
+
+  --progress-track-bg: rgba(255,255,255,0.2);
+  --progress-track-border: rgba(255,255,255,0.4);
+
+  --card-bg: #ffffff;
+  --card-text: #111111;
+  --card-shadow: 0 4px 10px rgba(0,0,0,0.1);
+
+  --dropzone-border: rgba(0,0,0,0.2);
+
+  --copy-btn-bg: #ffffff;
+  --copy-btn-border: rgba(0,0,0,0.15);
+  --copy-btn-text: #111111;
+
+  --select-bg: rgba(255,255,255,0.15);
+  --select-text: #ffffff;
+  --select-border: rgba(255,255,255,0.7);
+}
+
+
+:root[data-theme="light"] {
+  /* Background */
+  --bg-base: linear-gradient(135deg, #ffffff 0%, #f9f9f9 100%);
+
+  /* Outer container */
+  --outer-bg: #ffffff;
+  --outer-border: #e0e0e0;
+  --outer-shadow: 0 6px 16px rgba(0,0,0,0.08);
+  --outer-blur: 0px;
+
+  /* Panels */
+  --panel-bg: rgba(255, 255, 255, 0.9);
+  --panel-border: #e0e0e0;
+  --panel-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  --panel-radius: 14px;
+  --panel-text: #444444;
+
+  /* Text */
+  --text-primary: #333333;
+  --results-text: #333333;
+
+  /* Accent Gradient */
+  --grad-1: #2979ff;
+  --grad-2: #5ea8ff;
+  --grad-fallback: #2979ff;
+
+  /* Buttons */
+  --button-bg: #ffffff;
+  --button-text: #333333;
+  --button-border: #d0d0d0;
+  --button-hover-bg: #e6f0ff;  /* blue glow */
+  --button-hover-border: #c9dfff;
+
+  /* Progress Bars */
+  --progress-track-bg: #f0f0f0;
+  --progress-track-border: #d9d9d9;
+
+  /* Cards */
+  --card-bg: #ffffff;
+  --card-text: #333333;
+  --card-shadow: 0 6px 14px rgba(0,0,0,0.08);
+
+  /* Drop Zone */
+  --dropzone-border: #b0cfff;
+
+  /* Copy Button */
+  --copy-btn-bg: #ffffff;
+  --copy-btn-border: #d0d0d0;
+  --copy-btn-text: #333333;
+
+  /* Select Inputs (if reused anywhere else) */
+  --select-bg: #ffffff;
+  --select-text: #333333;
+  --select-border: #d0d0d0;
+}
+
+
+:root[data-theme="glass-dark"] {
+    --bg-base: radial-gradient(circle at 20% 20%, rgba(0,180,255,0.15), transparent 60%),
+               radial-gradient(circle at 80% 80%, rgba(255,0,150,0.12), transparent 60%),
+               linear-gradient(135deg, #1f2937 0%, #2b3a4b 100%);
+    
+    --outer-bg: rgba(255,255,255,0.05);
+    --outer-border: rgba(255,255,255,0.15);
+    --outer-shadow: 0 16px 40px rgba(0,0,0,0.45);
+    --outer-blur: 18px;
+  
+    --panel-bg: rgba(255,255,255,0.08);
+    --panel-border: rgba(255,255,255,0.25);
+    --panel-shadow: 0 12px 28px rgba(0,0,0,0.45);
+    --panel-radius: 16px;
+    --panel-text: #e5e5e5;
+  
+    --text-primary: #ffffff;
+    --results-text: #ffffff;
+  
+    --grad-1: #ffffff;
+    --grad-2: #ffffff;
+    --grad-fallback: #ffffff;
+  
+    --button-bg: rgba(255,255,255,0.1);
+    --button-text: #ffffff;
+    --button-border: rgba(255,255,255,0.25);
+    --button-hover-bg: rgba(255,255,255,0.2);
+  
+    --progress-track-bg: rgba(255,255,255,0.15);
+    --progress-track-border: rgba(255,255,255,0.25);
+  
+    --card-bg: rgba(255,255,255,0.06);
+    --card-text: #f0f0f0;
+    --card-shadow: 0 10px 24px rgba(0,0,0,0.5);
+  
+    --dropzone-border: rgba(255,255,255,0.25);
+  
+    --copy-btn-bg: rgba(255,255,255,0.1);
+    --copy-btn-border: rgba(255,255,255,0.25);
+    --copy-btn-text: #ffffff;
+  
+    --select-bg: rgba(255,255,255,0.1);
+    --select-text: #ffffff;
+    --select-border: rgba(255,255,255,0.25);
+  }
+  
+  
+  :root[data-theme="roseanna"] {
+    --bg-base: radial-gradient(circle at 20% 30%, rgba(255,255,255,0.25), transparent 60%),
+               linear-gradient(135deg, #FFAFBD 0%, #FFC3A0 100%);
+  
+    --outer-bg: rgba(255, 255, 255, 0.2);
+    --outer-border: rgba(255, 255, 255, 0.4);
+    --outer-shadow: 0 12px 36px rgba(0, 0, 0, 0.2);
+    --outer-blur: 14px;
+  
+    --panel-bg: rgba(255, 255, 255, 0.25);
+    --panel-border: rgba(255, 255, 255, 0.45);
+    --panel-shadow: 0 18px 36px rgba(0, 0, 0, 0.25);
+    --panel-radius: 18px;
+    --panel-text: #5c2e2e;
+  
+    --text-primary: #4A2C2A;
+    --results-text: #4A2C2A;
+  
+    --grad-1: #4A2C2A;
+    --grad-2: #4A2C2A;
+    --grad-fallback: #4A2C2A;
+  
+    --button-bg: rgba(255,255,255,0.2);
+    --button-text: #4A2C2A;
+    --button-border: currentColor;
+    --button-hover-bg: rgba(255, 255, 255, 0.5);
+  
+    --progress-track-bg: rgba(255,255,255,0.3);
+    --progress-track-border: rgba(255,255,255,0.45);
+  
+    --card-bg: rgba(255,255,255,0.65);
+    --card-text: #4A2C2A;
+    --card-shadow: 0 12px 28px rgba(74,44,42,0.25);
+  
+    --dropzone-border: rgba(0,0,0,0.25);
+  
+    --copy-btn-bg: rgba(255,255,255,0.8);
+    --copy-btn-border: rgba(0,0,0,0.15);
+    --copy-btn-text: #4A2C2A;
+  
+    --select-bg: rgba(255,255,255,0.25);
+    --select-text: #4A2C2A;
+    --select-border: rgba(255,255,255,0.6);
+  }
+  
+
+/* Honey Drew Theme */
+:root[data-theme="honey-drew"] {
+    --bg-base: linear-gradient(135deg, #43C6AC 0%, #F8FFAE 100%);
+    --outer-bg: rgba(255, 255, 255, 0.15);
+    --outer-border: rgba(255, 255, 255, 0.35);
+    --outer-shadow: 0 8px 35px rgba(0, 0, 0, 0.12);
+    --outer-blur: 12px;
+  
+    /* Panels */
+    --panel-bg: rgba(255, 255, 255, 0.14);
+    --panel-border: rgba(255, 255, 255, 0.4);
+    --panel-shadow: 0 18px 38px rgba(0, 0, 0, 0.18);
+    --panel-radius: 16px;
+  
+    /* Text */
+    --panel-text: #1F4E4E;
+    --text-primary: #1F4E4E;
+    --results-text: #1F4E4E;
+  
+    /* Accents & Gradients */
+    --grad-1: #1F4E4E;
+    --grad-2: #1F4E4E;
+    --grad-fallback: #1F4E4E;
+  
+    /* Buttons */
+    --button-bg: rgba(255, 255, 255, 0.15);
+    --button-text: #1F4E4E;
+    --button-border: currentColor; /* matches font color */
+    --button-hover-bg: rgba(255, 255, 255, 0.3);
+  
+    /* Progress Bars */
+    --progress-track-bg: rgba(255, 255, 255, 0.25);
+    --progress-track-border: rgba(255, 255, 255, 0.45);
+  
+    /* Cards */
+    --card-bg: rgba(255, 255, 255, 0.92); /* less transparent */
+    --card-text: #1F4E4E;
+    --card-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  
+    /* Drop Zone */
+    --dropzone-border: rgba(0, 0, 0, 0.25);
+  
+    /* Copy Button */
+    --copy-btn-bg: #ffffff;
+    --copy-btn-border: rgba(0, 0, 0, 0.15);
+    --copy-btn-text: #1F4E4E;
+  
+    /* Select Inputs */
+    --select-bg: rgba(255, 255, 255, 0.18);
+    --select-text: #1F4E4E;
+    --select-border: rgba(255, 255, 255, 0.6);
+  }
+  
+  /* Solid modals for Honey Drew */
+  :root[data-theme="honey-drew"] #uModal .gi,
+  :root[data-theme="honey-drew"] #aModal .gi,
+  :root[data-theme="honey-drew"] #tModal .gi {
+    background: #ffffff; /* solid white for panels */
+    border: 2px solid var(--panel-border);
+    box-shadow: var(--panel-shadow);
+    border-radius: var(--panel-radius);
+  }
+  
+  /* Header gradient text for Honey Drew */
+  :root[data-theme="honey-drew"] h1 {
+    background: linear-gradient(90deg, #43C6AC, #1F4E4E);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
+  
+
+/* Sapphire Drift Theme */
+:root[data-theme="sapphire-drift"] {
+  --bg-base: linear-gradient(135deg, #0A0F3C 0%, #2C5DA9 50%, #C8DAF9 100%);
+  --outer-bg: rgba(255, 255, 255, 0.1);
+  --outer-border: rgba(255, 255, 255, 0.25);
+  --outer-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+  --outer-blur: 14px;
+  --panel-bg: rgba(255, 255, 255, 0.1);
+  --panel-border: rgba(255, 255, 255, 0.35);
+  --panel-shadow: 0 20px 45px rgba(0, 0, 0, 0.28);
+  --panel-radius: 18px;
+  --panel-text: #e4eaff;
+  --text-primary: #ffffff;
+  --results-text: #ffffff;
+  --grad-1: #2C5DA9;
+  --grad-2: #2C5DA9;
+  --grad-fallback: #2C5DA9;
+  --button-bg: rgba(255, 255, 255, 0.15);
+  --button-text: #ffffff;
+  --button-border: rgba(255, 255, 255, 0.55);
+  --button-hover-bg: rgba(255, 255, 255, 0.25);
+  --progress-track-bg: rgba(255, 255, 255, 0.2);
+  --progress-track-border: rgba(255, 255, 255, 0.4);
+  --card-bg: rgba(255, 255, 255, 0.8);
+  --card-text: #111111;
+  --card-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  --dropzone-border: rgba(0, 0, 0, 0.2);
+  --copy-btn-bg: #ffffff;
+  --copy-btn-border: rgba(0, 0, 0, 0.15);
+  --copy-btn-text: #111111;
+  --select-bg: rgba(255, 255, 255, 0.15);
+  --select-text: #ffffff;
+  --select-border: rgba(255, 255, 255, 0.55);
+}
+
+
+/* Overrides removed: base rules above already use theme variables */
+
+/* Theme selector */
+#themeSelect {
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: rgba(15,23,42,0.85); /* dark slate */
+  color: #ffffff;
+  border: 1.5px solid rgba(255,255,255,0.6);
+  border-radius: 9999px;
+  padding: 6px 34px 6px 12px; /* room for arrow */
+  font-weight: 800;
+  line-height: 1.25;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+  cursor: pointer;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="white"><path d="M5.5 7.5l4.5 5 4.5-5"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 14px 14px;
+}
+#themeSelect:hover { border-color: #ffffff; box-shadow: 0 10px 28px rgba(0,0,0,0.35); }
+#themeSelect:focus { outline: 2px solid rgba(255,255,255,0.85); outline-offset: 2px; }

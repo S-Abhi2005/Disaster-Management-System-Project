@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">DisasterShield</string>
+    <string name="title_activity_main">DisasterShield</string>
+    <string name="package_name">com.disastershield.volunteer</string>
+    <string name="custom_url_scheme">com.disastershield.volunteer</string>
+</resources>
