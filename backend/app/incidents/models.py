@@ -14,6 +14,7 @@ class Incident(Base):
     longitude = Column(Float, nullable=False)
 
     type = Column(String, nullable=False, default="Other")
+    custom_type = Column(String, nullable=True)
     severity = Column(String, nullable=False, default="medium")
 
     status = Column(SAEnum(IncidentStatus), default=IncidentStatus.REPORTED)

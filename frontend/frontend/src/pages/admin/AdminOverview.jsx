@@ -38,7 +38,12 @@ const IncidentRow = ({ incident }) => (
       }}
     />
     <div className="flex-1 min-w-0">
-      <p className="text-sm font-medium text-slate-200 truncate">{incident.title}</p>
+      <div className="flex items-center gap-2">
+        <p className="text-sm font-medium text-slate-200 truncate">{incident.title}</p>
+        <span className="text-[10px] px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 shrink-0 font-medium">
+          {incident.type}
+        </span>
+      </div>
       <p className="text-xs text-slate-500 mt-0.5"><MapPin className="inline w-3 h-3 mr-1" />{incident.location?.address}</p>
     </div>
     <div className="flex items-center gap-2 shrink-0">

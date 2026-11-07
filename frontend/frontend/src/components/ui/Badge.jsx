@@ -17,12 +17,13 @@ const STATUS_MAP = {
   resolved:    'success',
   closed:      'neutral',
   critical:    'danger',
-  // Volunteer status
+  // Volunteer & Assignment status
   available:   'success',
   assigned:    'primary',
   unavailable: 'neutral',
+  in_progress: 'info',
+  completed:   'success',
   // Resource
-  available:      'success',
   partially_used: 'info',
   in_use:         'warning',
   maintenance:    'danger',
@@ -64,6 +65,7 @@ Badge.Status = ({ value, ...props }) => {
     pending: 'Pending', active: 'Active', resolved: 'Resolved', closed: 'Closed',
     critical: 'Critical', available: 'Available', assigned: 'Assigned',
     unavailable: 'Unavailable', in_use: 'In Use', partially_used: 'Partially Used', maintenance: 'Maintenance',
+    in_progress: 'In Progress', completed: 'Completed',
   };
   return (
     <Badge status={value} dot {...props}>

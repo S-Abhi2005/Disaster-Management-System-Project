@@ -158,8 +158,15 @@ const VolunteerOverview = () => {
                         ? <Activity className="w-4 h-4 text-indigo-400" />
                         : <CheckCircle2 className="w-4 h-4 text-green-400" />}
                     </div>
-                    <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                      <p className="text-sm font-semibold text-slate-200 truncate">{a.incident_title}</p>
+                    <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm font-semibold text-slate-200 truncate">{a.incident_title}</p>
+                        {a.incident_type && (
+                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 shrink-0 font-medium">
+                            {a.incident_type}
+                          </span>
+                        )}
+                      </div>
                       <div className="flex flex-wrap items-center gap-6">
                         <span className="text-xs text-slate-500 font-mono">{a.incident_id}</span>
                         <span className="text-slate-700">·</span>

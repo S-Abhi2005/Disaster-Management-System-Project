@@ -139,11 +139,12 @@ const CitizenOverview = () => {
                       }
                     </div>
                     <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
-                      <p className="text-sm font-semibold text-slate-200 group-hover:text-white transition-colors" style={{ 
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap'
-                      }}>{inc.title}</p>
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm font-semibold text-slate-200 group-hover:text-white transition-colors truncate">{inc.title}</p>
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 shrink-0 font-medium">
+                          {inc.type}
+                        </span>
+                      </div>
                       <div className="flex items-center gap-2" style={{ marginTop: '0.25rem' }}>
                         <span className="text-xs text-slate-500 font-mono">{inc.id}</span>
                         <span className="text-slate-700">·</span>

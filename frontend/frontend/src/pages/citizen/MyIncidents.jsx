@@ -33,8 +33,10 @@ const MyIncidents = () => {
   }
 
   const incidents = (data?.data || []).filter((i) =>
-    !search || i.title.toLowerCase().includes(search.toLowerCase()) ||
-    i.id.toLowerCase().includes(search.toLowerCase()),
+    !search ||
+    i.title.toLowerCase().includes(search.toLowerCase()) ||
+    i.id.toLowerCase().includes(search.toLowerCase()) ||
+    (i.type && i.type.toLowerCase().includes(search.toLowerCase())),
   );
 
   const totalPages = data?.pages || 1;

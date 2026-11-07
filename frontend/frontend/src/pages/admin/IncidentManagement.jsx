@@ -217,6 +217,14 @@ const IncidentManagement = () => {
 
   const totalPages  = data?.pages || 1;
 
+  const allIncidentTypes = React.useMemo(() => {
+    const set = new Set(INCIDENT_TYPES);
+    (data?.data || []).forEach(inc => {
+      if (inc?.type) set.add(inc.type);
+    });
+    return Array.from(set);
+  }, [data]);
+
   const statusMut = useMutation({
     mutationFn: ({ id, s }) => updateIncidentStatus(id, s),
     onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-incidents'] }); toast.success('Status updated'); },
@@ -279,7 +287,7 @@ const IncidentManagement = () => {
         </select>
         <select value={type} onChange={e => { setType(e.target.value); setPage(1); }} className="input-base sm:w-36">
           <option value="">All Types</option>
-          {INCIDENT_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+          {allIncidentTypes.map(t => <option key={t} value={t}>{t}</option>)}
         </select>
         {(status || type || search) && (
           <button onClick={() => { setStatus(''); setType(''); setSearch(''); setPage(1); }}

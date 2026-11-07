@@ -32,7 +32,8 @@ const mapIncidentFromBackend = (inc) => {
     latitude,
     longitude,
     severity: inc?.severity || 'medium',
-    type: inc?.type || 'Other',
+    type: inc?.type || inc?.custom_type || 'Other',
+    custom_type: inc?.custom_type || null,
     location: {
       lat: latitude,
       lng: longitude,
@@ -129,12 +130,19 @@ export const createIncident = async (payload) => {
   const latitude = payload?.location?.lat ?? payload?.latitude;
   const longitude = payload?.location?.lng ?? payload?.longitude;
 
+  const incidentType = (payload?.type === 'Other' && payload?.custom_type?.trim())
+    ? payload.custom_type.trim()
+    : (payload?.type || 'Other');
+
   const form = new FormData();
   form.append('title', payload?.title || '');
   form.append('description', payload?.description || '');
   form.append('latitude', String(latitude ?? ''));
   form.append('longitude', String(longitude ?? ''));
-  form.append('type', payload?.type || 'Other');
+  form.append('type', incidentType);
+  if (payload?.custom_type?.trim()) {
+    form.append('custom_type', payload.custom_type.trim());
+  }
   form.append('severity', payload?.severity || 'medium');
 
   const firstImageFile = payload?.images?.[0]?.file;

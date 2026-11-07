@@ -184,6 +184,7 @@ export const getMyAssignments = async (volunteerId) => {
         ...latestEvent,
         id: latestEvent.id || `${group.incident_id}-${latestEvent.action}-${ts}`,
         incident_title: inc ? inc.title : `Incident #${group.incident_id}`,
+        incident_type: inc?.type || inc?.custom_type || 'Other',
         incident_severity: inc?.severity || 'medium',
         incident_created_at: inc?.created_at,
         status,

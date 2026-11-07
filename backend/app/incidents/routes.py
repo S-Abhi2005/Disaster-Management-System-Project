@@ -24,6 +24,7 @@ async def create_incident(
     latitude: float = Form(..., description="Latitude coordinate"),
     longitude: float = Form(..., description="Longitude coordinate"),
     type: str | None = Form(None, description="Incident type"),
+    custom_type: str | None = Form(None, description="Custom incident type when type is Other"),
     severity: str | None = Form(None, description="Incident severity"),
     photo: UploadFile | None = File(None, description="Optional incident photo (jpg, png, gif, max 5MB)"),
     db: Session = Depends(get_db),
@@ -33,13 +34,32 @@ async def create_incident(
     import uuid
     from pathlib import Path
     
+    # Resolve type and custom_type
+    raw_type = (type or "").strip()
+    raw_custom = custom_type.strip() if custom_type else ""
+
+    if raw_type.lower() == "other":
+        if not raw_custom:
+            raise HTTPException(
+                status_code=400,
+                detail="Please specify the incident type when 'Other' is selected"
+            )
+        resolved_type = raw_custom
+    elif raw_custom:
+        resolved_type = raw_custom
+    elif raw_type:
+        resolved_type = raw_type
+    else:
+        resolved_type = "Other"
+
     # Create incident first
     incident = Incident(
-        title=title,
-        description=description,
+        title=title.strip(),
+        description=description.strip(),
         latitude=latitude,
         longitude=longitude,
-        type=type or "Other",
+        type=resolved_type,
+        custom_type=raw_custom if (raw_type.lower() == "other" or raw_custom) else None,
         severity=severity or "medium",
         reported_by=current_user.id
     )
@@ -91,6 +111,7 @@ async def create_incident(
         "latitude": incident.latitude,
         "longitude": incident.longitude,
         "type": incident.type,
+        "custom_type": getattr(incident, "custom_type", None),
         "severity": incident.severity,
         "status": incident.status,
         "created_at": incident.created_at,
@@ -159,6 +180,7 @@ def list_my_incidents(
             "latitude": incident.latitude,
             "longitude": incident.longitude,
             "type": getattr(incident, "type", None),
+            "custom_type": getattr(incident, "custom_type", None),
             "severity": getattr(incident, "severity", None),
             "status": incident.status.value if hasattr(incident.status, "value") else incident.status,
             "created_at": incident.created_at,
@@ -261,6 +283,7 @@ def list_incidents(
             "latitude": incident.latitude,
             "longitude": incident.longitude,
             "type": getattr(incident, "type", None),
+            "custom_type": getattr(incident, "custom_type", None),
             "severity": getattr(incident, "severity", None),
             "status": incident.status.value if hasattr(incident.status, "value") else incident.status,
             "created_at": incident.created_at,
@@ -326,6 +349,7 @@ def get_nearby_incidents(
                 "latitude": incident.latitude,
                 "longitude": incident.longitude,
                 "type": getattr(incident, "type", None),
+                "custom_type": getattr(incident, "custom_type", None),
                 "severity": getattr(incident, "severity", None),
                 "status": incident.status.value if hasattr(incident.status, 'value') else incident.status,
                 "created_at": incident.created_at,
@@ -357,6 +381,7 @@ def get_incident(
         "latitude": incident.latitude,
         "longitude": incident.longitude,
         "type": getattr(incident, "type", None),
+        "custom_type": getattr(incident, "custom_type", None),
         "severity": getattr(incident, "severity", None),
         "status": incident.status,
         "created_at": incident.created_at,

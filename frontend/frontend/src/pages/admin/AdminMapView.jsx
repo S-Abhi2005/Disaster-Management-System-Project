@@ -186,7 +186,12 @@ const AdminMapView = () => {
                 >
                   <Popup>
                     <div style={{ minWidth: 180 }}>
-                      <p className="font-bold text-sm text-gray-900 mb-1">{inc.title}</p>
+                      <div className="flex items-center justify-between gap-1 mb-1">
+                        <p className="font-bold text-sm text-gray-900 leading-tight">{inc.title}</p>
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 font-semibold border border-indigo-200 shrink-0">
+                          {inc.type}
+                        </span>
+                      </div>
                       <p className="text-xs text-gray-500 mb-2">{inc.location.address}</p>
                       <div className="flex gap-1.5 flex-wrap">
                         <span className="text-[10px] px-1.5 py-0.5 rounded-full font-bold uppercase"
@@ -243,9 +248,14 @@ const AdminMapView = () => {
           {/* Selected incident */}
           {selected ? (
             <div className="card" style={{ borderColor: 'rgba(99,102,241,0.2)', background: 'rgba(99,102,241,0.05)', padding: '1.5rem', marginBottom: '2rem' }}>
-              <div className="flex items-start justify-between gap-2 mb-4">
+              <div className="flex items-start justify-between gap-2 mb-2">
                 <p className="text-sm font-bold text-white font-display leading-tight">{selected.title}</p>
                 <button onClick={() => setSelected(null)} className="text-slate-600 hover:text-white shrink-0">×</button>
+              </div>
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">
+                  {selected.type}
+                </span>
               </div>
               <p className="text-xs text-slate-500 flex items-center gap-1 mb-3">
                 <MapPin className="w-3 h-3" />{selected.location?.address}

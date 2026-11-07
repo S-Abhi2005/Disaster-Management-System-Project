@@ -46,6 +46,11 @@ const ReportIncident = () => {
     location_address: Yup.string().required('Address is required'),
     city:             Yup.string().required('City is required'),
     type:             Yup.string().oneOf(INCIDENT_TYPES).required('Type is required'),
+    custom_type:      Yup.string().when('type', {
+      is: 'Other',
+      then: (schema) => schema.trim().required('Please specify the incident type'),
+      otherwise: (schema) => schema.notRequired(),
+    }),
     severity:         Yup.string().oneOf(SEVERITY_LEVELS).required('Severity is required'),
     title:            Yup.string().min(10, 'Min 10 characters').max(120).required('Title is required'),
     description:      Yup.string().min(20, 'Min 20 characters').required('Description is required'),
@@ -58,6 +63,7 @@ const ReportIncident = () => {
       latitude:  '',
       longitude: '',
       type:      '',
+      custom_type: '',
       severity:  '',
       title:     '',
       description: '',
@@ -67,8 +73,14 @@ const ReportIncident = () => {
     validateOnBlur: true,
     onSubmit: async (values, { setSubmitting }) => {
       try {
+        const resolvedType = (values.type === 'Other' && values.custom_type?.trim())
+          ? values.custom_type.trim()
+          : (values.type || 'Other');
+
         const payload = {
           ...values,
+          type: resolvedType,
+          custom_type: values.type === 'Other' ? values.custom_type?.trim() : undefined,
           location: {
             lat:     parseFloat(values.latitude)  || 19.076,
             lng:     parseFloat(values.longitude) || 72.877,
@@ -97,16 +109,28 @@ const ReportIncident = () => {
   ];
 
   const nextStep = async () => {
-    const fields = STEP_FIELDS[step];
+    let fields = STEP_FIELDS[step] || [];
+    if (step === 1 && formik.values.type === 'Other') {
+      fields = ['type', 'custom_type', 'severity'];
+    }
     if (fields?.length) {
       const errors = await formik.validateForm();
       const hasErr = fields.some((f) => errors[f]);
-      if (hasErr) { fields.forEach((f) => formik.setFieldTouched(f, true)); return; }
+      if (hasErr) {
+        fields.forEach((f) => formik.setFieldTouched(f, true));
+        return;
+      }
     }
     setStep((s) => Math.min(s + 1, STEPS.length - 1));
   };
 
   const isStepValid = () => {
+    if (step === 1) {
+      if (!formik.values.type) return false;
+      if (formik.values.type === 'Other' && (!formik.values.custom_type || !formik.values.custom_type.trim())) return false;
+      if (!formik.values.severity) return false;
+      return true;
+    }
     const fields = STEP_FIELDS[step];
     if (!fields?.length) return true;
     return fields.every((field) => {
@@ -207,9 +231,34 @@ const ReportIncident = () => {
         {/* Step 1: Type & Severity */}
         {step === 1 && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }} className="animate-fade-in">
-            <Select label="Incident Type" required placeholder="Select type" {...fld('type')}>
+            <Select
+              label="Incident Type"
+              required
+              placeholder="Select type"
+              {...fld('type')}
+              onChange={(e) => {
+                const val = e.target.value;
+                formik.setFieldValue('type', val);
+                if (val !== 'Other') {
+                  formik.setFieldValue('custom_type', '');
+                  formik.setFieldError('custom_type', undefined);
+                  formik.setFieldTouched('custom_type', false);
+                }
+              }}
+            >
               {INCIDENT_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
             </Select>
+
+            {formik.values.type === 'Other' && (
+              <div className="animate-fade-in">
+                <Input
+                  label="Specify Incident Type"
+                  placeholder="Enter the incident type"
+                  required
+                  {...fld('custom_type')}
+                />
+              </div>
+            )}
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               <label className="block text-sm font-medium text-slate-300">Severity Level <span className="text-red-400">*</span></label>
@@ -304,7 +353,12 @@ const ReportIncident = () => {
               <h4 className="text-sm font-bold text-white" style={{ marginBottom: '1rem' }}>Incident Details</h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 {[
-                  { label: 'Type',        value: formik.values.type },
+                  {
+                    label: 'Type',
+                    value: formik.values.type === 'Other'
+                      ? (formik.values.custom_type?.trim() || 'Other')
+                      : formik.values.type
+                  },
                   { label: 'Severity',    value: formik.values.severity },
                   { label: 'Title',       value: formik.values.title },
                   { label: 'Location',    value: formik.values.location_address },

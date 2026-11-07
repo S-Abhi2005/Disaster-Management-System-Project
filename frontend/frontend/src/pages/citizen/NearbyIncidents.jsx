@@ -203,7 +203,12 @@ const NearbyIncidents = () => {
               >
                 <Popup>
                   <div style={{ minWidth: 200 }} className="text-white">
-                    <p className="font-bold text-sm mb-1">{inc.title}</p>
+                    <div className="flex items-center justify-between gap-1 mb-1">
+                      <p className="font-bold text-sm leading-tight">{inc.title}</p>
+                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-semibold border border-indigo-500/30 shrink-0">
+                        {inc.type}
+                      </span>
+                    </div>
                     <p className="text-xs text-slate-400 mb-2">{inc.location.address}</p>
                     <div className="flex items-center gap-2">
                       <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full"
@@ -241,7 +246,12 @@ const NearbyIncidents = () => {
                   }`}
                 >
                   <div className="flex items-start justify-between gap-2 mb-2">
-                    <p className="text-sm font-semibold text-slate-200 leading-tight">{inc.title}</p>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-slate-200 leading-tight truncate">{inc.title}</p>
+                      <span className="inline-block text-[10px] px-1.5 py-0.5 rounded bg-indigo-500/10 text-indigo-300 font-medium border border-indigo-500/20 mt-1">
+                        {inc.type}
+                      </span>
+                    </div>
                     <span className={`text-[10px] font-bold uppercase px-1.5 py-0.5 rounded border shrink-0 ${sev.text} ${sev.bg} ${sev.border}`}>
                       {inc.severity}
                     </span>
@@ -266,7 +276,13 @@ const NearbyIncidents = () => {
           <div className="flex items-start justify-between gap-3 mb-3">
             <div>
               <p className="font-bold text-white font-display text-base">{selected.title}</p>
-              <p className="text-xs text-slate-500 mt-0.5 flex items-center gap-1"><MapPin className="w-3 h-3" />{selected.location.address}</p>
+              <div className="flex items-center gap-2 mt-1">
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 font-medium">
+                  {selected.type}
+                </span>
+                <span className="text-slate-600">·</span>
+                <p className="text-xs text-slate-500 flex items-center gap-1"><MapPin className="w-3 h-3" />{selected.location.address}</p>
+              </div>
             </div>
             <div className="flex gap-2 shrink-0">
               <Badge.Status value={selected.status} />

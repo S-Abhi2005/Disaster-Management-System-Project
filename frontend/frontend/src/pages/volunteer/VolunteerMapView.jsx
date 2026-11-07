@@ -214,8 +214,13 @@ const VolunteerMapView = () => {
               >
                 <Popup>
                   <div style={{ minWidth: '220px', padding: '0.5rem' }}>
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="font-bold text-sm">{incident.title}</span>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="font-bold text-sm text-gray-900 leading-tight">{incident.title}</span>
+                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 font-semibold border border-indigo-200 shrink-0">
+                        {incident.type}
+                      </span>
+                    </div>
+                    <div className="mb-2">
                       <Badge.Status value={incident.severity} />
                     </div>
                     <p className="text-xs text-slate-600 mb-3 leading-relaxed">{incident.description}</p>

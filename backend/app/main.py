@@ -48,6 +48,7 @@ def on_startup():
         with engine.begin() as conn:
             conn.execute(text('ALTER TABLE incidents ADD COLUMN IF NOT EXISTS type VARCHAR'))
             conn.execute(text("UPDATE incidents SET type = 'Other' WHERE type IS NULL"))
+            conn.execute(text('ALTER TABLE incidents ADD COLUMN IF NOT EXISTS custom_type VARCHAR'))
             conn.execute(text('ALTER TABLE incidents ADD COLUMN IF NOT EXISTS severity VARCHAR'))
             conn.execute(text("UPDATE incidents SET severity = 'medium' WHERE severity IS NULL"))
 

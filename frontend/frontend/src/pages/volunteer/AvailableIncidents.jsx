@@ -44,6 +44,14 @@ const AvailableIncidents = () => {
     });
   }, [incidents, assignments, search, typeFilter]);
 
+  const allIncidentTypes = useMemo(() => {
+    const set = new Set(INCIDENT_TYPES);
+    (incidents || []).forEach((i) => {
+      if (i?.type) set.add(i.type);
+    });
+    return Array.from(set);
+  }, [incidents]);
+
   // Fetch volunteer counts for all visible incidents
   const { data: volunteerCounts = {} } = useQuery({
     queryKey: ['volunteer-counts', filtered.map(i => i.id).join(',')],
@@ -170,7 +178,7 @@ const AvailableIncidents = () => {
           <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}
             className="input-base w-full pr-10">
             <option value="">All Types</option>
-            {INCIDENT_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
+            {allIncidentTypes.map((t) => <option key={t} value={t}>{t}</option>)}
           </select>
           <Filter className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 pointer-events-none" />
         </div>
