@@ -26,15 +26,16 @@ def get_volunteer_history(
     user=Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    events = history_for_subject("VOLUNTEER", volunteer_id)
-    if events:
-        return events
-
-    # Fallback to persisted assignment after backend restart
     vol = db.query(Volunteer).filter(Volunteer.id == volunteer_id).first()
     if not vol:
         vol = db.query(Volunteer).filter(Volunteer.user_id == volunteer_id).first()
 
+    target_id = vol.id if vol else volunteer_id
+    events = history_for_subject("VOLUNTEER", target_id)
+    if events:
+        return events
+
+    # Fallback to persisted assignment after backend restart
     if vol and vol.current_incident_id:
         return [
             {

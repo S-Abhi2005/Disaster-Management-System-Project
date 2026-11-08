@@ -105,14 +105,18 @@ export const createVolunteer = async (payload) => {
 
 export const getVolunteerById = async (id) => {
   try {
-    // Backend lacks GET /volunteers/{id}, fetching all and filtering (max limit is 100)
-    const { data } = await getVolunteers({ page: 1, limit: 100 });
-    const volunteer = data.find((v) => String(v.id) === String(id));
-    if (!volunteer) throw new Error('Volunteer not found');
-    return volunteer;
+    const response = await axiosInstance.get(`/volunteers/${id}`);
+    return response.data || response;
   } catch (error) {
-    console.error('getVolunteerById error:', error);
-    throw error;
+    try {
+      const { data } = await getVolunteers({ page: 1, limit: 100 });
+      const volunteer = data.find((v) => String(v.id) === String(id));
+      if (!volunteer) throw new Error('Volunteer not found');
+      return volunteer;
+    } catch (fallbackError) {
+      console.error('getVolunteerById error:', error);
+      throw error;
+    }
   }
 };
 

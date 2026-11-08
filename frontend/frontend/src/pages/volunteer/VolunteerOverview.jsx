@@ -43,8 +43,15 @@ const VolunteerOverview = () => {
   };
 
   const completed = assignments.filter((a) => a.status === 'completed').length;
+  const completedCount = Math.max(user?.assignments_completed ?? 0, completed);
   const active    = assignments.filter((a) => a.status === 'in_progress').length;
   const unreadAlerts = alerts.filter((a) => !a.read).length;
+
+  React.useEffect(() => {
+    if (user && completedCount > 0 && user.assignments_completed !== completedCount) {
+      updateUser({ assignments_completed: completedCount });
+    }
+  }, [completedCount, user?.assignments_completed]);
 
   let totalResponseMs = 0;
   let responseCount = 0;
@@ -114,7 +121,7 @@ const VolunteerOverview = () => {
           <>
           <div className="grid grid-cols-2 lg:grid-cols-4 stagger" style={{ gap: '2rem' }}>
           <StatCard title="Active Assignments" value={active}     icon={Activity}    accent="warning" subtitle="in progress" />
-          <StatCard title="Completed"          value={user?.assignments_completed ?? completed} icon={CheckCircle2} accent="success" trend={5} trendLabel="this month" />
+          <StatCard title="Completed"          value={completedCount} icon={CheckCircle2} accent="success" trend={5} trendLabel="this month" />
           <StatCard title="Experience"         value={`${user?.experience_years ?? 0}y`} icon={TrendingUp} accent="primary" subtitle={user?.skill} />
           <StatCard title="Live Alerts"        value={unreadAlerts} icon={Zap}       accent="danger"  subtitle="for volunteers" />
           </div>

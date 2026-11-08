@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { User, Phone, MapPin, Building2, Edit3, Save, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import useAuthStore from '../../store/authStore';
-import { updateVolunteerProfile } from '../../api/volunteerService';
+import { updateVolunteerProfile, getMyAssignments } from '../../api/volunteerService';
 import { SKILLS, AVAILABILITY_OPTIONS, VEHICLE_TYPES } from '../../api/volunteerService';
 import Input from '../../components/ui/Input';
 import Select from '../../components/ui/Select';
@@ -14,6 +15,15 @@ import { getInitials } from '../../utils/helpers';
 const VolunteerProfile = () => {
   const { user, updateUser } = useAuthStore();
   const [editing, setEditing] = useState(false);
+
+  const { data: assignments = [] } = useQuery({
+    queryKey: ['my-assignments', user?.id],
+    queryFn: () => getMyAssignments(user?.id),
+    enabled: !!user?.id,
+  });
+
+  const completedAssignments = (assignments || []).filter((a) => a.status === 'completed').length;
+  const completedCount = Math.max(user?.assignments_completed ?? 0, completedAssignments);
 
   const formik = useFormik({
     initialValues: {
@@ -94,7 +104,7 @@ const VolunteerProfile = () => {
               <div className="flex items-center gap-3" style={{ marginTop: '0.5rem' }}>
                 <span className="badge badge-success">Volunteer</span>
                 {user?.rating && <span className="text-xs text-yellow-400">No rating yet</span>}
-                <span className="text-xs text-slate-500">{user?.assignments_completed ?? 0} completed</span>
+                <span className="text-xs text-slate-500">{completedCount} completed</span>
               </div>
             </div>
           </div>

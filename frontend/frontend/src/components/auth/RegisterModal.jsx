@@ -351,7 +351,7 @@ const RegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
           backdropFilter: 'blur(40px)', WebkitBackdropFilter: 'blur(40px)',
           border: '1px solid rgba(255,255,255,0.1)',
           borderRadius: '1.75rem', padding: '2rem',
-          position: 'relative', overflowX: 'hidden', overflowY: 'auto',
+          position: 'relative', overflowX: 'hidden',
           boxShadow: '0 0 0 1px rgba(99,102,241,0.08), 0 25px 80px rgba(0,0,0,0.7), 0 0 120px rgba(99,102,241,0.08)',
           transform: visible ? 'scale(1) translateY(0)' : 'scale(0.9) translateY(30px)',
           opacity: visible ? 1 : 0,

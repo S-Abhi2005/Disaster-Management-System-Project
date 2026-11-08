@@ -27,21 +27,21 @@ def _db_all():
 
 
 def history_for_incident(incident_id: int):
-    mem = [e for e in ASSIGNMENT_EVENTS if e["incident_id"] == incident_id]
-    if mem:
-        return mem
-    return [e for e in _db_all() if e["incident_id"] == incident_id]
+    db_items = [e for e in _db_all() if e["incident_id"] == incident_id]
+    if db_items:
+        return db_items
+    return [e for e in ASSIGNMENT_EVENTS if e["incident_id"] == incident_id]
 
 
 def history_for_subject(assignment_type: str, subject_id: int):
-    mem = [
-        e for e in ASSIGNMENT_EVENTS
+    db_items = [
+        e for e in _db_all()
         if e["assignment_type"] == assignment_type and e["subject_id"] == subject_id
     ]
-    if mem:
-        return mem
+    if db_items:
+        return db_items
     return [
-        e for e in _db_all()
+        e for e in ASSIGNMENT_EVENTS
         if e["assignment_type"] == assignment_type and e["subject_id"] == subject_id
     ]
 

@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   ShieldCheck, Shield, UserPlus, Search, RefreshCw,
   Mail, Phone, MapPin, Calendar, Power, Edit3, Trash2,
-  CheckCircle2, AlertTriangle, XCircle, Lock, User
+  CheckCircle2, AlertTriangle, XCircle, Lock, User, X
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import useAuthStore from '../../store/authStore';
@@ -349,22 +349,26 @@ const AdminManagement = () => {
     }
   };
 
-  // Filtered list
+  // Filtered list: Search by name, email, or city + Role filter + Status filter
   const filteredAdmins = admins.filter((a) => {
+    const q = search.trim().toLowerCase();
     const matchesSearch =
-      (a.full_name || '').toLowerCase().includes(search.toLowerCase()) ||
-      (a.email || '').toLowerCase().includes(search.toLowerCase()) ||
-      (a.city || '').toLowerCase().includes(search.toLowerCase());
+      !q ||
+      (a.full_name || '').toLowerCase().includes(q) ||
+      (a.email || '').toLowerCase().includes(q) ||
+      (a.city || '').toLowerCase().includes(q);
 
+    const adminRole = String(a.role || '').toUpperCase();
     const matchesRole =
       roleFilter === 'ALL' ||
-      (roleFilter === 'SUPER_ADMIN' && a.role === 'SUPER_ADMIN') ||
-      (roleFilter === 'ADMIN' && a.role === 'ADMIN');
+      (roleFilter === 'SUPER_ADMIN' && adminRole === 'SUPER_ADMIN') ||
+      (roleFilter === 'ADMIN' && adminRole === 'ADMIN');
 
+    const isActive = Boolean(a.is_active ?? true);
     const matchesStatus =
       statusFilter === 'ALL' ||
-      (statusFilter === 'ACTIVE' && a.is_active) ||
-      (statusFilter === 'INACTIVE' && !a.is_active);
+      (statusFilter === 'ACTIVE' && isActive) ||
+      (statusFilter === 'INACTIVE' && !isActive);
 
     return matchesSearch && matchesRole && matchesStatus;
   });
@@ -458,52 +462,107 @@ const AdminManagement = () => {
       </div>
 
       {/* Filter and Search Controls */}
-      <div className="card card-sm flex flex-col md:flex-row items-center justify-between gap-4">
-        <div className="relative w-full md:w-80">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+      <div className="card p-4 sm:p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        {/* Search Input */}
+        <div className="relative flex-1 min-w-[260px] max-w-full lg:max-w-md">
+          <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center justify-center">
+            <Search className="w-4 h-4" />
+          </div>
           <input
             type="text"
             placeholder="Search by name, email, or city..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-slate-900/60 border border-white/10 rounded-xl pl-10 pr-4 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+            className="input-base pl-12 pr-10 h-11 text-sm bg-slate-900/80 border-white/10 rounded-xl placeholder:text-slate-500 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30 transition-all w-full"
           />
+          {search && (
+            <button
+              type="button"
+              onClick={() => setSearch('')}
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-white rounded-md hover:bg-white/10 transition-colors cursor-pointer"
+              title="Clear search"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
-          {/* Role Filter */}
-          <div className="flex bg-slate-900/60 rounded-xl p-1 border border-white/10">
-            {['ALL', 'SUPER_ADMIN', 'ADMIN'].map((r) => (
-              <button
-                key={r}
-                onClick={() => setRoleFilter(r)}
-                className={`text-xs px-3 py-1.5 rounded-lg font-medium transition-colors ${
-                  roleFilter === r
-                    ? 'bg-indigo-600 text-white shadow-sm'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                {r === 'ALL' ? 'All Roles' : r === 'SUPER_ADMIN' ? 'Super Admins' : 'Admins'}
-              </button>
-            ))}
+        {/* Filter Groups */}
+        <div className="flex flex-wrap items-center gap-4 sm:gap-6">
+          {/* Role Filter Group */}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-2">
+            <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+              Role:
+            </span>
+            <div className="inline-flex items-center p-1 rounded-xl bg-slate-900/80 border border-white/10 gap-1.5 shadow-inner">
+              {[
+                { value: 'ALL', label: 'All Roles' },
+                { value: 'SUPER_ADMIN', label: 'Super Admins' },
+                { value: 'ADMIN', label: 'Admins' },
+              ].map((r) => (
+                <button
+                  key={r.value}
+                  type="button"
+                  onClick={() => setRoleFilter(r.value)}
+                  className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all duration-150 shrink-0 cursor-pointer ${
+                    roleFilter === r.value
+                      ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30 border border-indigo-400/30'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.05] border border-transparent'
+                  }`}
+                >
+                  {r.label}
+                </button>
+              ))}
+            </div>
           </div>
 
-          {/* Status Filter */}
-          <div className="flex bg-slate-900/60 rounded-xl p-1 border border-white/10">
-            {['ALL', 'ACTIVE', 'INACTIVE'].map((s) => (
-              <button
-                key={s}
-                onClick={() => setStatusFilter(s)}
-                className={`text-xs px-3 py-1.5 rounded-lg font-medium transition-colors ${
-                  statusFilter === s
-                    ? 'bg-indigo-600 text-white shadow-sm'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                {s === 'ALL' ? 'All Status' : s === 'ACTIVE' ? 'Active' : 'Inactive'}
-              </button>
-            ))}
+          {/* Status Filter Group */}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-2">
+            <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+              Status:
+            </span>
+            <div className="inline-flex items-center p-1 rounded-xl bg-slate-900/80 border border-white/10 gap-1.5 shadow-inner">
+              {[
+                { value: 'ALL', label: 'All Status' },
+                { value: 'ACTIVE', label: 'Active' },
+                { value: 'INACTIVE', label: 'Inactive' },
+              ].map((s) => (
+                <button
+                  key={s.value}
+                  type="button"
+                  onClick={() => setStatusFilter(s.value)}
+                  className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all duration-150 shrink-0 cursor-pointer ${
+                    statusFilter === s.value
+                      ? s.value === 'ACTIVE'
+                        ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/30 border border-emerald-400/30'
+                        : s.value === 'INACTIVE'
+                        ? 'bg-rose-600 text-white shadow-md shadow-rose-600/30 border border-rose-400/30'
+                        : 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30 border border-indigo-400/30'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.05] border border-transparent'
+                  }`}
+                >
+                  {s.label}
+                </button>
+              ))}
+            </div>
           </div>
+
+          {/* Reset Filters Shortcut */}
+          {(search || roleFilter !== 'ALL' || statusFilter !== 'ALL') && (
+            <button
+              type="button"
+              onClick={() => {
+                setSearch('');
+                setRoleFilter('ALL');
+                setStatusFilter('ALL');
+              }}
+              className="text-xs text-indigo-400 hover:text-indigo-300 font-medium px-2.5 py-1.5 rounded-lg hover:bg-indigo-500/10 transition-colors flex items-center gap-1.5 shrink-0 cursor-pointer"
+              title="Reset all search and filter criteria"
+            >
+              <X className="w-3.5 h-3.5" />
+              <span>Reset</span>
+            </button>
+          )}
         </div>
       </div>
 
@@ -521,14 +580,28 @@ const AdminManagement = () => {
               title="No administrator accounts found"
               description={
                 search || roleFilter !== 'ALL' || statusFilter !== 'ALL'
-                  ? 'Try adjusting your search criteria or filter options.'
+                  ? 'No administrator accounts match your current search and filter criteria.'
                   : 'Get started by creating your first team administrator.'
               }
               action={
-                isSuperAdmin && (
-                  <Button variant="primary" size="sm" onClick={() => setCreateOpen(true)} icon={UserPlus}>
-                    Create Administrator
+                search || roleFilter !== 'ALL' || statusFilter !== 'ALL' ? (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setSearch('');
+                      setRoleFilter('ALL');
+                      setStatusFilter('ALL');
+                    }}
+                  >
+                    Clear Filters
                   </Button>
+                ) : (
+                  isSuperAdmin && (
+                    <Button variant="primary" size="sm" onClick={() => setCreateOpen(true)} icon={UserPlus}>
+                      Create Administrator
+                    </Button>
+                  )
                 )
               }
             />

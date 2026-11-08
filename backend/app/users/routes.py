@@ -49,6 +49,7 @@ def read_current_user(current_user: User = Depends(get_current_user), db: Sessio
     elif role_str == "VOLUNTEER":
         volunteer = db.query(Volunteer).filter(Volunteer.user_id == current_user.id).first()
         if volunteer:
+            from app.volunteers.routes import get_volunteer_completed_count
             base_data.update({
                 "volunteer_id": volunteer.id,
                 "skill": volunteer.skill.value if hasattr(volunteer.skill, 'value') and volunteer.skill else volunteer.skill,
@@ -57,7 +58,8 @@ def read_current_user(current_user: User = Depends(get_current_user), db: Sessio
                 "vehicle_availability": volunteer.vehicle_availability,
                 "vehicle_type": volunteer.vehicle_type.value if hasattr(volunteer.vehicle_type, 'value') and volunteer.vehicle_type else volunteer.vehicle_type,
                 "organization": volunteer.organization,
-                "is_available": volunteer.is_available
+                "is_available": volunteer.is_available,
+                "assignments_completed": get_volunteer_completed_count(db, volunteer.id),
             })
             
     return base_data

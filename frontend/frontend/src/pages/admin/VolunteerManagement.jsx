@@ -84,7 +84,7 @@ const VolunteerModal = ({ volunteer: v, onClose }) => (
         <CheckCircle2 className="w-5 h-5 text-green-400 shrink-0 mt-0.5" />
         <div>
           <p className="text-[11px] text-green-500 uppercase tracking-wider font-semibold mb-1">Tasks Completed</p>
-          <p className="text-lg font-bold text-green-400">{v.assignments_completed}</p>
+          <p className="text-lg font-bold text-green-400">{v.assignments_completed ?? 0}</p>
         </div>
       </div>
 
@@ -150,7 +150,7 @@ const VolunteerCard = ({ v, onView }) => {
         </div>
         <div className="flex items-center gap-3 text-sm text-slate-400">
           <Star className="w-5 h-5 shrink-0 text-yellow-500" />
-          <span>{v.rating ?? '—'}/5 rating · {v.assignments_completed} tasks completed</span>
+          <span>{v.rating ?? '—'}/5 rating · {v.assignments_completed ?? 0} tasks completed</span>
         </div>
         <div className="flex items-center gap-3 text-sm text-slate-400">
           <Zap className="w-5 h-5 shrink-0 text-slate-500" />
@@ -261,7 +261,12 @@ const VolunteerManagement = () => {
       )}
 
       {/* Detail modal */}
-      {viewTarget && <VolunteerModal volunteer={viewTarget} onClose={() => setViewTarget(null)} />}
+      {viewTarget && (
+        <VolunteerModal
+          volunteer={volunteers.find(v => v.id === viewTarget.id) || viewTarget}
+          onClose={() => setViewTarget(null)}
+        />
+      )}
     </div>
   );
 };

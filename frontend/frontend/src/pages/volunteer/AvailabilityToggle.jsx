@@ -3,10 +3,10 @@ import {
   Zap, Clock, AlertTriangle, Calendar, CheckCircle,
   Activity, MapPin, Info,
 } from 'lucide-react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import useAuthStore from '../../store/authStore';
-import { updateAvailability } from '../../api/volunteerService';
+import { updateAvailability, getMyAssignments } from '../../api/volunteerService';
 import { AVAILABILITY_OPTIONS } from '../../api/volunteerService';
 import Button from '../../components/ui/Button';
 
@@ -50,6 +50,15 @@ const StatusCard = ({ active, label, count, color }) => (
 const AvailabilityToggle = () => {
   const { user, updateUser } = useAuthStore();
   const qc = useQueryClient();
+
+  const { data: assignments = [] } = useQuery({
+    queryKey: ['my-assignments', user?.id],
+    queryFn: () => getMyAssignments(user?.id),
+    enabled: !!user?.id,
+  });
+
+  const completedAssignments = (assignments || []).filter((a) => a.status === 'completed').length;
+  const completedCount = Math.max(user?.assignments_completed ?? 0, completedAssignments);
 
   const isOnline        = user?.is_available ?? true;
   const currentSchedule = user?.availability || 'Available Anytime';
@@ -155,7 +164,7 @@ const AvailabilityToggle = () => {
 
       {/* Quick stats */}
       <div className="grid grid-cols-3" style={{ gap: '1rem' }}>
-        <StatusCard label="Completed" count={user?.assignments_completed ?? 0} color="#4ade80" />
+        <StatusCard label="Completed" count={completedCount} color="#4ade80" />
         <StatusCard label="Experience" count={`${user?.experience_years ?? 0}y`} color="#818cf8" />
         <StatusCard label="Rating" count={user?.rating ? `${user.rating}/5` : '—'} color="#facc15" />
       </div>

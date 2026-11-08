@@ -159,6 +159,15 @@ const MyAssignments = () => {
       setCompletingId(null);
       qc.invalidateQueries({ queryKey: ['my-assignments'] });
       qc.invalidateQueries({ queryKey: ['available-incidents'] });
+      qc.invalidateQueries({ queryKey: ['admin-volunteers'] });
+      qc.invalidateQueries({ queryKey: ['volunteers-all'] });
+      qc.invalidateQueries({ queryKey: ['assignments-all'] });
+      if (user) {
+        useAuthStore.getState().updateUser({
+          assignments_completed: (user.assignments_completed || 0) + 1,
+          is_available: true,
+        });
+      }
     },
     onError: (err) => {
       toast.error(err?.response?.data?.detail || err?.message || 'Could not complete assignment.');
